@@ -23,7 +23,7 @@ top_speakers <- friends |>
 friends_tokens <- friends |> 
   filter(speaker %in% top_speakers) |>  
   unnest_tokens(word, text) |>  
-  filter(!str_detect(word, "[0-9]")) |>  
+  filter(!str_detect(word, "\\d")) |>  
   select(speaker, word)
 
 # 3. отберите по 500 самых частотных слов для каждого персонажа
