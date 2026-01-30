@@ -68,10 +68,11 @@ pca_fit <- prcomp(friends_tf_wide, scale. = T, center = T)
 # сохраните график как переменную q
 
 q <- fviz_pca_biplot(pca_fit, 
-                     geom = 'text',  # Простой вариант
+                     geom = "text",  # Только текст
                      col.ind = as.factor(km.out$cluster),
                      select.var = list(cos2 = 20),
-                     labelsize = 4,
-                     repel = T)
+                     repel = TRUE)
+
+
 
 
