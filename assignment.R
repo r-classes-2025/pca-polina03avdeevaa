@@ -23,7 +23,7 @@ top_speakers <- friends |>
 friends_tokens <- friends |> 
   filter(speaker %in% top_speakers) |>  
   unnest_tokens(word, text) |>  
-  filter(!str_detect(word, "\\d")) |>  
+  filter(!str_remove_all(word, "\\d")) |>  
   filter(word != "") |>
   select(speaker, word)
 
