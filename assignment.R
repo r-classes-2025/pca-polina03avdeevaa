@@ -29,21 +29,23 @@ friends_tokens <- friends |>
 # 3. отберите по 500 самых частотных слов для каждого персонажа
 # посчитайте относительные частотности для слов
 friends_tf <- friends_tokens |>
-  count(speaker, word, sort = T) |>          
+  count(speaker, word, sort = TRUE) |>          
   group_by(speaker) |> 
-  mutate(total = sum(n),                       
-         tf = round(n / total, 5)) |>         
+  mutate(total = sum(n),
+         tf = n / total) |>      # ← БЕЗ round()
   ungroup() |> 
   group_by(speaker) |> 
   slice_max(n, n = 500, with_ties = FALSE) |> 
   ungroup() |> 
   select(speaker, word, tf)
 
+
 # 4. преобразуйте в широкий формат; 
 # столбец c именем спикера превратите в имя ряда, используя подходящую функцию 
 friends_tf_wide <- friends_tf |> 
   pivot_wider(names_from = word, values_from = tf, values_fill = 0) |>  
-  column_to_rownames("speaker") # Так как если не сделать это, то все ломается из-за нечислового столбца
+  column_to_rownames("speaker") |> 
+  .[order(rownames(.)), order(colnames(.))]
 
 # 5. установите зерно 123
 # проведите кластеризацию k-means (k = 3) на относительных значениях частотности (nstart = 20)
