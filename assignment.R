@@ -41,8 +41,8 @@ friends_tf <- friends_tokens |>
   group_by(speaker) |>  
   slice_max(n, n = 500, with_ties = F) |>  
   ungroup() |> 
-  select(speaker, word, word_tf) |> 
-  rename(tf = word_tf)
+  rename(tf = word_tf) |> 
+  select(speaker, word, tf)
 
 # 4. преобразуйте в широкий формат; 
 # столбец c именем спикера превратите в имя ряда, используя подходящую функцию 
