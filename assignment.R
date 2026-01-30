@@ -30,13 +30,13 @@ friends_tokens <- friends |>
 # 3. отберите по 500 самых частотных слов для каждого персонажа
 # посчитайте относительные частотности для слов
 friends_tf <- friends_tokens |>
-  count(speaker, word, sort = TRUE) |>          
+  count(speaker, word, sort = T) |>          
   group_by(speaker) |> 
   mutate(total = sum(n),
-         tf = n / total) |>      # ← БЕЗ round()
+         tf = n / total) |>     
   ungroup() |> 
   group_by(speaker) |> 
-  slice_max(n, n = 500, with_ties = FALSE) |> 
+  slice_max(n, n = 500, with_ties = F) |> 
   ungroup() |> 
   select(speaker, word, tf)
 
@@ -65,15 +65,10 @@ pca_fit <- prcomp(scale(friends_tf_wide), center = F, scale. = F)
 # отберите 20 наиболее значимых переменных (по косинусу, см. документацию к функции)
 # сохраните график как переменную q
 
-q <- fviz_pca_biplot(
-  pca_fit,
-  col.ind = as.factor(km.out$cluster),
-  select.var = list(cos2 = 20)
-) +
-  geom_text(
-    aes(label = rownames(friends_tf_wide)),
-    size = 4
-  )
+q <- fviz_pca_biplot(pca_fit, 
+                     col.ind = as.factor(km.out$cluster),
+                     select.var = list(cos2 = 20)) +
+  geom_text(aes(label = rownames(friends_tf_wide)), size = 4)
 
 
 
