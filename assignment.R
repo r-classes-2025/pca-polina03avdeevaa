@@ -29,15 +29,16 @@ friends_tokens <- friends |>
 # 3. отберите по 500 самых частотных слов для каждого персонажа
 # посчитайте относительные частотности для слов
 friends_tf <- friends_tokens |>
-  count(speaker, word, sort = TRUE) |>          
-  group_by(speaker) |> 
-  mutate(total = sum(n),
-         tf = n / total) |>      # ← БЕЗ round()
-  ungroup() |> 
-  group_by(speaker) |> 
-  slice_max(n, n = 500, with_ties = FALSE) |> 
-  ungroup() |> 
-  select(speaker, word, tf)
+  filter(word %in% top_words) |>
+  count(speaker, word) |>
+  group_by(speaker) |>
+  mutate(tf = n / sum(n)) |>
+  ungroup() |>
+  select(speaker, word, tf) |> 
+  count(word, sort = T) |>
+  slice_head(n = 500) |>
+  pull(word)
+
 
 
 # 4. преобразуйте в широкий формат; 
