@@ -37,16 +37,17 @@ friends_tf <- friends_tokens |>
       summarise(total = n()),
     by = "speaker"
   ) |>  
-  mutate(word_tf = round((n / total), 5)) |>  
+  mutate(tf = n / total) |>  
   group_by(speaker) |>  
-  slice_max(n, n = 500, with_ties = FALSE) |>  
+  slice_max(n, n = 500, with_ties = F) |>  
   ungroup() |> 
-  select(speaker, word, word_tf)
+  select(speaker, word, word_tf) |> 
+  rename(tf = word_tf)
 
 # 4. преобразуйте в широкий формат; 
 # столбец c именем спикера превратите в имя ряда, используя подходящую функцию 
 friends_tf_wide <- friends_tf |> 
-  pivot_wider(names_from = word, values_from = word_tf, values_fill = 0) |>  
+  pivot_wider(names_from = word, values_from = tf, values_fill = 0) |>  
   column_to_rownames("speaker") # Так как если не сделать это, то все ломается из-за нечислового столбца
 
 # 5. установите зерно 123
@@ -68,7 +69,8 @@ pca_fit <- prcomp(friends_tf_wide, scale. = T, center = T)
 # сохраните график как переменную q
 
 q <- fviz_pca_biplot(pca_fit, 
-                     geom = 'text', 
+                     geom.ind = 'text',
+                     geom.var = 'arrow',
                      col.ind = as.factor(km.out$cluster),
                      select.var = list(cos2 = 20),
                      repel = T)
