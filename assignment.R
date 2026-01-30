@@ -41,7 +41,6 @@ friends_tf <- friends_tokens |>
   group_by(speaker) |>  
   slice_max(n, n = 500, with_ties = F) |>  
   ungroup() |> 
-  rename(tf = word_tf) |> 
   select(speaker, word, tf)
 
 # 4. преобразуйте в широкий формат; 
