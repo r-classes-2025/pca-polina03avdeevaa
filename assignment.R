@@ -37,7 +37,7 @@ friends_tf <- friends_tokens |>
       summarise(total = n()),
     by = "speaker"
   ) |>  
-  mutate(tf = n / total) |>  
+  mutate(tf = round(n / total, 5)) |>  
   group_by(speaker) |>  
   slice_max(n, n = 500, with_ties = F) |>  
   ungroup() |> 
@@ -68,10 +68,10 @@ pca_fit <- prcomp(friends_tf_wide, scale. = T, center = T)
 # сохраните график как переменную q
 
 q <- fviz_pca_biplot(pca_fit, 
-                     geom.ind = 'text',
-                     geom.var = 'arrow',
+                     geom = 'text',  # Простой вариант
                      col.ind = as.factor(km.out$cluster),
                      select.var = list(cos2 = 20),
+                     labelsize = 4,
                      repel = T)
 
 
