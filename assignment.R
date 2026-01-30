@@ -23,9 +23,9 @@ top_speakers <- friends |>
 friends_tokens <- friends |> 
   filter(speaker %in% top_speakers) |>  
   unnest_tokens(word, text) |>  
-  filter(!str_remove_all(word, "\\d")) |>  
-  filter(word != "") |>
-  select(speaker, word)
+  mutate(word_clean = str_remove_all(word, "\\d+")) |>   
+  filter(word_clean != "") |> 
+  select(speaker, word = word_clean)
 
 # 3. отберите по 500 самых частотных слов для каждого персонажа
 # посчитайте относительные частотности для слов
